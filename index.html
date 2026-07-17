@@ -265,7 +265,6 @@
 
         <div class="form-group">
             <label for="bancadaInput">Identifique sua Bancada:</label>
-            <!-- Placeholder fixado esteticamente como solicitado -->
             <input type="text" id="bancadaInput" placeholder="Ex: Bancada 01" autofocus required>
         </div>
 
@@ -331,8 +330,8 @@
 
         let totalGeralAguardando = 0;
         let filaCompletaLocais = [];
+        let executandoChamadaFlag = false; // Trava física de software contra duplo enter sequencial
 
-        // Trata a string para formatação elegante no envio ao Firebase
         function formatarNomeBancada(valor) {
             if (!valor) return "Bancada 01";
             let valorLimpo = valor.trim();
@@ -344,7 +343,6 @@
             return valorLimpo;
         }
 
-        // Trata qualquer variação de escrita do motorista
         function extrairDadosGaiola(gaiolaStr) {
             if (!gaiolaStr) return null;
             let limpo = gaiolaStr.trim().toUpperCase().replace(/\s+/g, '');
@@ -362,7 +360,6 @@
             return null;
         }
 
-        // Calcula o número do parceiro
         function obterParceiroGaiola(dadosGaiola) {
             if (!dadosGaiola) return null;
             const num = dadosGaiola.numero;
@@ -391,45 +388,48 @@
             totalGeralAguardando = totalAguardando;
             contadorFila.innerText = totalAguardando;
 
-            const proximoPrincipal = filaCompletaLocais.find(d => d.status === "aguardando");
-            if (proximoPrincipal) {
-                const infoGaiola = extrairDadosGaiola(proximoPrincipal.gaiola);
-                const parceiroInfo = obterParceiroGaiola(infoGaiola);
+            // Se o botão não estiver travado por processamento interno, atualiza o texto/estado normal
+            if (!executandoChamadaFlag) {
+                const proximoPrincipal = filaCompletaLocais.find(d => d.status === "aguardando");
+                if (proximoPrincipal) {
+                    const infoGaiola = extrairDadosGaiola(proximoPrincipal.gaiola);
+                    const parceiroInfo = obterParceiroGaiola(infoGaiola);
 
-                const parceiroFila = filaCompletaLocais.find(d => {
-                    if (d.status !== "aguardando") return false;
-                    const infoD = extrairDadosGaiola(d.gaiola);
-                    return infoD && infoD.gaiolaTexto === parceiroInfo?.gaiolaTexto;
-                });
+                    const parceiroFila = filaCompletaLocais.find(d => {
+                        if (d.status !== "aguardando") return false;
+                        const infoD = extrairDadosGaiola(d.gaiola);
+                        return infoD && infoD.gaiolaTexto === parceiroInfo?.gaiolaTexto;
+                    });
 
-                const principalEhImpar = infoGaiola && infoGaiola.numero % 2 !== 0;
-                
-                let linhaImparHTML = "";
-                let linhaParHTML = "";
+                    const principalEhImpar = infoGaiola && infoGaiola.numero % 2 !== 0;
+                    
+                    let lineImpar = "";
+                    let linePar = "";
 
-                if (principalEhImpar) {
-                    linhaImparHTML = `<strong>Gaiola ${infoGaiola.gaiolaTexto}:</strong> <span class="txt-presente">${proximoPrincipal.nome}</span>`;
-                    if (parceiroFila) {
-                        linhaParHTML = `<strong>Gaiola ${parceiroInfo.gaiolaTexto}:</strong> <span class="txt-presente">${parceiroFila.nome}</span>`;
+                    if (principalEhImpar) {
+                        lineImpar = `<strong>Gaiola ${infoGaiola.gaiolaTexto}:</strong> <span class="txt-presente">${proximoPrincipal.nome}</span>`;
+                        if (parceiroFila) {
+                            linePar = `<strong>Gaiola ${parceiroInfo.gaiolaTexto}:</strong> <span class="txt-presente">${parceiroFila.nome}</span>`;
+                        } else {
+                            linePar = `<strong>Gaiola ${parceiroInfo ? parceiroInfo.gaiolaTexto : '-'}:</strong> <span class="txt-ausente">AGUARDANDO...</span>`;
+                        }
                     } else {
-                        linhaParHTML = `<strong>Gaiola ${parceiroInfo ? parceiroInfo.gaiolaTexto : '-'}:</strong> <span class="txt-ausente">AGUARDANDO...</span>`;
+                        linePar = `<strong>Gaiola ${infoGaiola.gaiolaTexto}:</strong> <span class="txt-presente">${proximoPrincipal.nome}</span>`;
+                        if (parceiroFila) {
+                            lineImpar = `<strong>Gaiola ${parceiroInfo.gaiolaTexto}:</strong> <span class="txt-presente">${parceiroFila.nome}</span>`;
+                        } else {
+                            lineImpar = `<strong>Gaiola ${parceiroInfo ? parceiroInfo.gaiolaTexto : '-'}:</strong> <span class="txt-ausente">AGUARDANDO...</span>`;
+                        }
                     }
+
+                    dadosProximo.innerHTML = `${lineImpar}<br>${linePar}`;
+                    btnChamar.disabled = false;
+                    btnChamar.innerText = "Chamar Dupla";
                 } else {
-                    linhaParHTML = `<strong>Gaiola ${infoGaiola.gaiolaTexto}:</strong> <span class="txt-presente">${proximoPrincipal.nome}</span>`;
-                    if (parceiroFila) {
-                        linhaImparHTML = `<strong>Gaiola ${parceiroInfo.gaiolaTexto}:</strong> <span class="txt-presente">${parceiroFila.nome}</span>`;
-                    } else {
-                        linhaImparHTML = `<strong>Gaiola ${parceiroInfo ? parceiroInfo.gaiolaTexto : '-'}:</strong> <span class="txt-ausente">AGUARDANDO...</span>`;
-                    }
+                    dadosProximo.innerHTML = "Ninguém na fila";
+                    btnChamar.disabled = true;
+                    btnChamar.innerText = "Fila Vazia";
                 }
-
-                dadosProximo.innerHTML = `${linhaImparHTML}<br>${linhaParHTML}`;
-                btnChamar.disabled = false;
-                btnChamar.innerText = "Chamar Dupla";
-            } else {
-                dadosProximo.innerHTML = "Ninguém na fila";
-                btnChamar.disabled = true;
-                btnChamar.innerText = "Fila Vazia";
             }
         });
 
@@ -438,6 +438,8 @@
         });
 
         function executarChamada() {
+            if (executandoChamadaFlag) return; // Bloqueia o início se já estiver salvando um comando
+
             let bancadaDigitada = bancadaInput.value.trim();
             const bancadaSalva = localStorage.getItem('ultimaBancada');
 
@@ -451,17 +453,21 @@
                     return;
                 }
             } else {
-                // Guarda de fundo apenas para permitir o clique rápido sem redigitar
                 localStorage.setItem('ultimaBancada', bancadaDigitada);
             }
 
             if (totalGeralAguardando === 0) return; 
 
-            const agora = new Date();
-            const horaFormatada = agora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+            // Ativa travas físicas e visuais imediatas
+            executandoChamadaFlag = true;
+            btnChamar.disabled = true;
+            btnChamar.innerText = "Processando Chamada...";
 
             const principal = filaCompletaLocais.find(d => d.status === "aguardando");
-            if (!principal) return;
+            if (!principal) {
+                executandoChamadaFlag = false;
+                return;
+            }
 
             const infoGaiola = extrairDadosGaiola(principal.gaiola);
             const parceiroInfo = obterParceiroGaiola(infoGaiola);
@@ -472,61 +478,85 @@
                 return infoD && infoD.gaiolaTexto === parceiroInfo?.gaiolaTexto;
             });
 
-            // Formata o nome para gravação
+            const agora = new Date();
+            const horaFormatada = agora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
             const bancadaParaEnviar = formatarNomeBancada(bancadaDigitada);
 
-            // Grava o chamado do principal
-            database.ref('fila/' + principal.id).update({
-                status: "chamado",
-                bancada: bancadaParaEnviar,
-                horaChamado: horaFormatada,
-                parceiroId: parceiro ? parceiro.id : "retardatario",
-                parceiroNome: parceiro ? parceiro.nome : "AGUARDANDO...",
-                parceiroGaiola: parceiroInfo ? parceiroInfo.gaiolaTexto : ""
+            // SEGURANÇA MÁXIMA: Usa transação atômica do Firebase para o motorista principal.
+            // Se outra bancada tiver alterado o status dele nos últimos milissegundos, esta transação vai abortar.
+            const principalRef = database.ref('fila/' + principal.id);
+            
+            principalRef.transaction(function(currentData) {
+                if (currentData === null) return currentData;
+                // Se alguém já pegou esse motorista, cancela mudando o status localmente para evitar sobrescrever
+                if (currentData.status !== "aguardando") {
+                    return; // Aborta transação retornando indefinido (não altera nada)
+                }
+                
+                // Aplica as novas chaves com segurança
+                currentData.status = "chamado";
+                currentData.bancada = bancadaParaEnviar;
+                currentData.horaChamado = horaFormatada;
+                currentData.parceiroId = parceiro ? parceiro.id : "retardatario";
+                currentData.parceiroNome = parceiro ? parceiro.nome : "AGUARDANDO...";
+                currentData.parceiroGaiola = parceiroInfo ? parceiroInfo.gaiolaTexto : "";
+                return currentData;
+            }, function(error, committed, snapshot) {
+                if (error || !committed) {
+                    // Outra bancada chamou primeiro! Destrava o botão e avisa o operador sem quebrar o painel.
+                    executandoChamadaFlag = false;
+                    btnChamar.disabled = false;
+                    btnChamar.innerText = "Chamar Dupla";
+                    bancadaInput.value = "";
+                    bancadaInput.focus();
+                    return; 
+                }
+
+                // Se o principal foi com sucesso, processamos o parceiro
+                if (parceiro) {
+                    database.ref('fila/' + parceiro.id).update({
+                        status: "chamado",
+                        bancada: bancadaParaEnviar,
+                        horaChamado: horaFormatada,
+                        parceiroId: principal.id,
+                        parceiroNome: principal.nome,
+                        parceiroGaiola: infoGaiola.gaiolaTexto
+                    });
+                }
+
+                // Renderiza na tela o resultado da chamada executada por esta bancada
+                const principalEhImpar = infoGaiola && infoGaiola.numero % 2 !== 0;
+                
+                if (principalEhImpar) {
+                    nomeAtualImpar.innerText = principal.nome;
+                    gaiolaAtualImpar.innerText = infoGaiola.gaiolaTexto;
+                    nomeAtualPar.innerText = parceiro ? parceiro.nome : "AGUARDANDO...";
+                    gaiolaAtualPar.innerText = parceiroInfo ? parceiroInfo.gaiolaTexto : "-";
+                } else {
+                    nomeAtualPar.innerText = principal.nome;
+                    gaiolaAtualPar.innerText = infoGaiola.gaiolaTexto;
+                    nomeAtualImpar.innerText = parceiro ? parceiro.nome : "AGUARDANDO...";
+                    gaiolaAtualImpar.innerText = parceiroInfo ? parceiroInfo.gaiolaTexto : "-";
+                }
+                
+                nomeAtualImpar.className = nomeAtualImpar.innerText === "AGUARDANDO..." ? "txt-ausente" : "txt-presente";
+                nomeAtualPar.className = nomeAtualPar.innerText === "AGUARDANDO..." ? "txt-ausente" : "txt-presente";
+
+                horaAtual.innerText = horaFormatada;
+                painelAtual.style.display = "block";
+
+                // Libera os controles para a próxima chamada legítima
+                executandoChamadaFlag = false;
+                bancadaInput.value = "";
+                bancadaInput.focus();
             });
-
-            // Se o parceiro também estiver, altera simultaneamente
-            if (parceiro) {
-                database.ref('fila/' + parceiro.id).update({
-                    status: "chamado",
-                    bancada: bancadaParaEnviar,
-                    horaChamado: horaFormatada,
-                    parceiroId: principal.id,
-                    parceiroNome: principal.nome,
-                    parceiroGaiola: infoGaiola.gaiolaTexto
-                });
-            }
-
-            const principalEhImpar = infoGaiola && infoGaiola.numero % 2 !== 0;
-            
-            if (principalEhImpar) {
-                nomeAtualImpar.innerText = principal.nome;
-                gaiolaAtualImpar.innerText = infoGaiola.gaiolaTexto;
-                nomeAtualPar.innerText = parceiro ? parceiro.nome : "AGUARDANDO...";
-                gaiolaAtualPar.innerText = parceiroInfo ? parceiroInfo.gaiolaTexto : "-";
-            } else {
-                nomeAtualPar.innerText = principal.nome;
-                gaiolaAtualPar.innerText = infoGaiola.gaiolaTexto;
-                nomeAtualImpar.innerText = parceiro ? parceiro.nome : "AGUARDANDO...";
-                gaiolaAtualImpar.innerText = parceiroInfo ? parceiroInfo.gaiolaTexto : "-";
-            }
-            
-            nomeAtualImpar.className = nomeAtualImpar.innerText === "AGUARDANDO..." ? "txt-ausente" : "txt-presente";
-            nomeAtualPar.className = nomeAtualPar.innerText === "AGUARDANDO..." ? "txt-ausente" : "txt-presente";
-
-            horaAtual.innerText = horaFormatada;
-            painelAtual.style.display = "block";
-
-            // Limpa o input e o cursor volta a piscar. O placeholder visual continuará fixo como "Ex: Bancada 01"
-            bancadaInput.value = "";
-            bancadaInput.focus();
         }
 
         btnChamar.addEventListener('click', executarChamada);
 
         window.addEventListener('keydown', function(evento) {
             if (evento.key === 'Enter') {
-                executarChamada();
+                executandoChamadaFlag ? evento.preventDefault() : executarChamada();
             }
         });
     </script>
