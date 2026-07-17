@@ -3,335 +3,306 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Painel de Chamadas - Acompanhamento Duplo</title>
+    <title>Painel do Atendente - Bancada Dupla (Operação Laranja)</title>
     <style>
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
         }
 
         body {
-            background-color: #0d0f12;
-            color: #e2e8f0;
-            padding: 25px;
+            background: radial-gradient(circle at center, #241202 0%, #0f0701 100%);
             display: flex;
-            flex-direction: column;
+            justify-content: center;
             align-items: center;
             min-height: 100vh;
+            padding: 20px;
+            color: #f3f4f6;
         }
 
         .container {
-            width: 100%;
-            max-width: 1200px;
-        }
-
-        header {
-            text-align: center;
-            margin-bottom: 30px;
-            border-bottom: 1px solid #1e293b;
-            padding-bottom: 15px;
-            position: relative;
-        }
-
-        header h1 {
-            color: #ff6b00;
-            font-size: 38px;
-            font-weight: 900;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            text-shadow: 0 0 20px rgba(255, 107, 0, 0.3);
-        }
-
-        header p {
-            color: #94a3b8;
-            margin-top: 8px;
-            font-size: 18px;
-            font-weight: 500;
-        }
-
-        /* CARD DESTAQUE PRINCIPAL */
-        .chamado-principal {
-            background: linear-gradient(135deg, #151922 0%, #0f1319 100%);
-            border: 3px solid #ff6b00;
+            background: rgba(30, 20, 15, 0.85);
+            border: 1px solid rgba(255, 123, 8, 0.25);
+            backdrop-filter: blur(12px);
             border-radius: 20px;
-            padding: 35px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5), 0 0 40px rgba(255, 123, 8, 0.1);
+            padding: 30px;
+            width: 100%;
+            max-width: 580px;
             text-align: center;
-            box-shadow: 0 0 35px rgba(255, 107, 0, 0.2);
-            margin-bottom: 30px;
-            animation: pulsar-borda 2s infinite alternate;
-        }
-
-        @keyframes pulsar-borda {
-            from {
-                border-color: #ff6b00;
-                box-shadow: 0 0 25px rgba(255, 107, 0, 0.15);
-            }
-            to {
-                border-color: #ff9e59;
-                box-shadow: 0 0 45px rgba(255, 107, 0, 0.35);
-            }
-        }
-
-        .chamado-principal h2 {
-            color: #94a3b8;
-            font-size: 20px;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            margin-bottom: 25px;
-            font-weight: 700;
-        }
-
-        .bancada-destacada {
-            color: #ff6b00;
-            font-size: 42px;
-            font-weight: 900;
-            text-shadow: 0 0 15px rgba(255, 107, 0, 0.4);
-            display: inline-block;
-            margin-left: 5px;
-        }
-
-        .destaque-dupla-flex {
-            display: flex;
-            gap: 25px;
-            justify-content: space-between;
-            flex-wrap: wrap;
-            margin-bottom: 20px;
-        }
-
-        .motorista-destaque-box {
-            flex: 1;
-            min-width: 280px;
-            background: #1e2530;
-            padding: 25px;
-            border-radius: 16px;
-            border: 1px solid #2e3748;
-            border-left: 8px solid #10b981; 
-            text-align: left;
             transition: all 0.3s ease;
         }
 
-        .motorista-destaque-box.retardatario {
-            border-left-color: #ef4444; 
-            background: #271a21;
-            border-color: #4a202d;
-        }
-
-        .nome-grande {
-            font-size: 32px;
-            font-weight: 900;
-            color: #10b981; 
-            margin-bottom: 15px;
-            word-wrap: break-word;
-            min-height: 80px;
-            display: flex;
-            align-items: center;
-            text-shadow: 0 0 10px rgba(16, 185, 129, 0.2);
-        }
-
-        .retardatario .nome-grande {
-            color: #ef4444; 
-            font-style: italic;
-            text-shadow: 0 0 10px rgba(239, 68, 68, 0.2);
-        }
-
-        .gaiola-badge {
-            display: inline-block;
-            background-color: rgba(16, 185, 129, 0.15);
-            color: #10b981;
-            padding: 8px 16px;
-            border-radius: 8px;
+        h1 {
+            color: #ff7b08;
+            font-size: 26px;
             font-weight: 800;
-            font-size: 18px;
-            border: 1px solid rgba(16, 185, 129, 0.3);
-            letter-spacing: 1px;
-        }
-
-        .retardatario .gaiola-badge {
-            background-color: rgba(239, 68, 68, 0.15);
-            color: #ef4444;
-            border-color: rgba(239, 68, 68, 0.3);
-        }
-
-        .meta-chamado {
-            margin-top: 20px;
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            font-size: 18px;
-            color: #ff6b00;
-            border-top: 1px solid #1e293b;
-            padding-top: 15px;
-            font-weight: 700;
-        }
-
-        /* CONTAINER VAZIO */
-        .chamado-principal.vazio {
-            animation: none;
-            border-color: #2e3748;
-            box-shadow: none;
-        }
-
-        /* HISTÓRICO */
-        .historico-section {
-            background-color: #11151d;
-            border: 1px solid #1e293b;
-            border-radius: 16px;
-            padding: 25px;
-        }
-
-        .historico-section h3 {
-            font-size: 20px;
-            color: #94a3b8;
             margin-bottom: 20px;
-            border-bottom: 2px solid #1e293b;
-            padding-bottom: 12px;
-            font-weight: 700;
-            text-transform: uppercase;
             letter-spacing: 1px;
-        }
-
-        .chamada-item {
-            padding: 16px;
-            border-bottom: 1px solid #1e293b;
-            font-size: 18px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .chamada-item:last-child {
-            border-bottom: none;
-        }
-
-        .motorista-col {
-            font-weight: 800;
-            color: #10b981; 
-            font-size: 19px;
-        }
-
-        .motorista-col.ausente {
-            color: #ef4444; 
-            font-style: italic;
-        }
-
-        .gaiola-col {
-            font-size: 15px;
-            color: #94a3b8;
-            font-weight: 600;
-            margin-top: 3px;
-        }
-
-        .bancada-badge {
-            background-color: #ff6b00;
-            padding: 6px 14px;
-            border-radius: 30px;
-            font-weight: 800;
-            color: #0d0f12;
-            font-size: 15px;
-            box-shadow: 0 0 10px rgba(255, 107, 0, 0.2);
+            text-shadow: 0 0 15px rgba(255, 123, 8, 0.3);
             text-transform: uppercase;
         }
 
-        .sem-chamadas {
-            text-align: center;
-            color: #64748b;
-            padding: 40px 0;
-            font-size: 18px;
+        .form-group {
+            text-align: left;
+            margin-bottom: 18px;
         }
 
-        /* INTERRUPTOR DE AUDIO (MODAL FLUTUANTE) */
-        #audioPermissao {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: #ff6b00;
-            color: #0d0f12;
-            padding: 12px 20px;
-            border-radius: 30px;
-            font-weight: 800;
-            cursor: pointer;
-            z-index: 1000;
+        label {
+            display: block;
+            color: #d1d5db;
+            font-weight: 600;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid rgba(255, 123, 8, 0.2);
+            border-radius: 10px;
+            font-size: 15px;
+            font-weight: 500;
+            background-color: rgba(15, 10, 5, 0.6);
+            color: #ffffff;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        input[type="text"]::placeholder {
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        input[type="text"]:focus {
+            border-color: #ff7b08;
+            background-color: rgba(15, 10, 5, 0.9);
+            box-shadow: 0 0 15px rgba(255, 123, 8, 0.25);
+        }
+
+        input[type="text"].erro-campo {
+            border-color: #ef4444 !important;
+            background-color: rgba(239, 68, 68, 0.1) !important;
+            box-shadow: 0 0 15px rgba(239, 68, 68, 0.3) !important;
+        }
+
+        .status-box {
+            background-color: rgba(255, 123, 8, 0.05);
+            border: 1px solid rgba(255, 123, 8, 0.15);
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 18px;
+            font-size: 14px;
+            color: #ff9d42;
             display: flex;
             align-items: center;
+            justify-content: center;
             gap: 10px;
-            box-shadow: 0 4px 20px rgba(255, 107, 0, 0.4);
-            border: none;
+        }
+
+        .status-box span {
+            font-weight: 800;
+            font-size: 20px;
+            color: #ffffff;
+            background: #ff7b08;
+            padding: 1px 10px;
+            border-radius: 20px;
+            box-shadow: 0 0 10px rgba(255, 123, 8, 0.4);
+        }
+
+        .proximo-preview {
+            background-color: rgba(255, 255, 255, 0.02);
+            border: 1px dashed rgba(255, 255, 255, 0.12);
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 20px;
+            text-align: left;
             font-size: 14px;
+            color: #e5e7eb;
+            line-height: 1.5;
+        }
+
+        .proximo-preview h4 {
+            color: #ff7b08;
+            text-transform: uppercase;
+            font-size: 11px;
+            margin-bottom: 8px;
+            letter-spacing: 1px;
+            border-bottom: 1px dashed rgba(255, 255, 255, 0.12);
+            padding-bottom: 4px;
+        }
+
+        .txt-presente {
+            color: #4ade80 !important;
+            font-weight: 700;
+        }
+
+        .txt-ausente {
+            color: #f87171 !important;
+            font-weight: 700;
+        }
+
+        .btn-call {
+            width: 100%;
+            background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 10px;
+            font-size: 17px;
+            font-weight: 700;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
             transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
         }
 
-        #audioPermissao:hover {
-            transform: scale(1.05);
-            background: #ff852e;
+        .btn-call:hover:not(:disabled) {
+            background: linear-gradient(135deg, #1dbb58 0%, #16a34a 100%);
+            box-shadow: 0 6px 16px rgba(22, 163, 74, 0.4);
+            transform: translateY(-1px);
         }
 
-        #audioPermissao.ativo {
-            background: #1e293b;
-            color: #94a3b8;
+        .btn-call:active:not(:disabled) {
+            transform: translateY(1px);
+        }
+
+        .btn-call:disabled {
+            background: #374151;
+            color: #9ca3af;
+            cursor: not-allowed;
             box-shadow: none;
+        }
+
+        .atual-chamado {
+            margin-top: 22px;
+            padding: 16px;
+            background: linear-gradient(145deg, rgba(255, 123, 8, 0.06) 0%, rgba(255, 123, 8, 0.01) 100%);
+            border: 1px solid rgba(255, 123, 8, 0.2);
+            border-radius: 12px;
+            display: none;
+            text-align: left;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .atual-chamado h3 {
+            color: #ff9d42;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            margin-bottom: 12px;
+            border-bottom: 1px solid rgba(255, 123, 8, 0.15);
+            padding-bottom: 4px;
+            text-align: center;
+        }
+
+        .dupla-container {
+            display: flex;
+            gap: 15px;
+            margin-top: 5px;
+        }
+
+        .dupla-box {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.02);
+            padding: 12px 10px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+        }
+
+        .driver-name {
+            font-size: 16px;
+            line-height: 1.2;
+            margin-bottom: 8px;
+            min-height: 38px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cage-badge {
+            display: inline-block;
+            background: rgba(255, 123, 8, 0.12);
+            border: 1px solid rgba(255, 123, 8, 0.25);
+            color: #ff9d42;
+            padding: 3px 10px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+        }
+
+        .dica-teclado {
+            margin-top: 14px;
+            font-size: 12px;
+            color: #6b7280;
+        }
+        
+        .dica-teclado strong {
+            color: #ff7b08;
         }
     </style>
 </head>
 <body>
 
-    <!-- Botão de Ativação do Áudio -->
-    <button id="audioPermissao" onclick="ativarAudio()">
-        🔊 ATIVAR SOM DO PAINEL
-    </button>
-
     <div class="container">
-        <header>
-            <h1>Painel de Entregas</h1>
-            <p>Chamadas em Tempo Real (Duplas de Carga)</p>
-        </header>
+        <h1>Painel da Bancada</h1>
 
-        <!-- Destaque Principal -->
-        <div class="chamado-principal" id="containerDestaque" style="display: none;">
-            <h2>Chamando Agora na <span class="bancada-destacada" id="destaqueBancada">Bancada -</span></h2>
-            
-            <div class="destaque-dupla-flex">
-                <div class="motorista-destaque-box" id="boxImpar">
-                    <div class="nome-grande" id="nomeImpar">-</div>
-                    <div>
-                        <span class="gaiola-badge" id="gaiolaImpar">-</span>
-                    </div>
-                </div>
-
-                <div class="motorista-destaque-box" id="boxPar">
-                    <div class="nome-grande" id="nomePar">-</div>
-                    <div>
-                        <span class="gaiola-badge" id="gaiolaPar">-</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="meta-chamado">
-                <span>Horário da Chamada: <span id="destaqueHora">00:00</span></span>
-            </div>
+        <div class="form-group">
+            <label for="bancadaInput">Identifique sua Bancada:</label>
+            <input type="text" id="bancadaInput" placeholder="Ex: Bancada 01" autofocus required>
         </div>
 
-        <!-- Mensagem de Espera -->
-        <div class="chamado-principal vazio" id="containerVazio">
-            <h2 style="color: #ff6b00; margin-bottom: 10px;">Aguardando chamada inicial...</h2>
-            <p style="color: #94a3b8;">As próximas duplas de motoristas aparecerão aqui.</p>
+        <div class="status-box">
+            Motoristas aguardando: <span id="contadorFila">0</span>
         </div>
 
-        <!-- Histórico -->
-        <div class="historico-section">
-            <h3>Últimas Duplas Chamadas</h3>
-            <div id="listaHistorico">
-                <div class="sem-chamadas">Nenhuma chamada realizada ainda.</div>
+        <div class="proximo-preview">
+            <h4>Próxima Chamada (Status de Presença):</h4>
+            <div id="dadosProximo">Ninguém na fila</div>
+        </div>
+
+        <button id="btnChamar" class="btn-call">Chamar Próximo</button>
+        <p class="dica-teclado">Pressione <strong>ENTER</strong> para Chamar a Dupla</p>
+
+        <div id="painelAtual" class="atual-chamado">
+            <h3>Última Chamada Realizada:</h3>
+            <div class="dupla-container">
+                <div class="dupla-box">
+                    <div class="driver-name"><span id="nomeAtualImpar" class="txt-presente">-</span></div>
+                    <div class="cage-badge"><span id="gaiolaAtualImpar">-</span></div>
+                </div>
+                <div class="dupla-box">
+                    <div class="driver-name"><span id="nomeAtualPar" class="txt-presente">-</span></div>
+                    <div class="cage-badge"><span id="gaiolaAtualPar">-</span></div>
+                </div>
             </div>
+            <p style="margin-top: 12px; font-size: 12px; color: #9ca3af; text-align: center; border-top: 1px solid rgba(255, 255, 255, 0.05); padding-top: 8px;">
+                Horário da Chamada: <strong style="color: #ff7b08;"><span id="horaAtual">-</span></strong>
+            </p>
         </div>
     </div>
 
+    <!-- SDK do Firebase -->
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-database-compat.js"></script>
 
     <script>
-        // Configurações do Firebase
         const firebaseConfig = {
             apiKey: "AIzaSyCndSz1N8C_i94VbQsVLu9VUIEI1du-KAo",
             authDomain: "sistema-drives.firebaseapp.com",
@@ -345,79 +316,31 @@
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
 
-        // Elementos de DOM
-        const containerDestaque = document.getElementById('containerDestaque');
-        const containerVazio = document.getElementById('containerVazio');
-        const nomeImpar = document.getElementById('nomeImpar');
-        const gaiolaImpar = document.getElementById('gaiolaImpar');
-        const boxImpar = document.getElementById('boxImpar');
-        const nomePar = document.getElementById('nomePar');
-        const gaiolaPar = document.getElementById('gaiolaPar');
-        const boxPar = document.getElementById('boxPar');
-        const destaqueBancada = document.getElementById('destaqueBancada');
-        const destaqueHora = document.getElementById('destaqueHora');
-        const listaHistorico = document.getElementById('listaHistorico');
-        const btnAudio = document.getElementById('audioPermissao');
+        const contadorFila = document.getElementById('contadorFila');
+        const dadosProximo = document.getElementById('dadosProximo');
+        const btnChamar = document.getElementById('btnChamar');
+        const bancadaInput = document.getElementById('bancadaInput');
+        
+        const painelAtual = document.getElementById('painelAtual');
+        const nomeAtualImpar = document.getElementById('nomeAtualImpar');
+        const gaiolaAtualImpar = document.getElementById('gaiolaAtualImpar');
+        const nomeAtualPar = document.getElementById('nomeAtualPar');
+        const gaiolaAtualPar = document.getElementById('gaiolaAtualPar');
+        const horaAtual = document.getElementById('horaAtual');
 
-        let ultimoIdChamado = null;
-        let audioAtivo = false;
-        let audioCtx = null;
+        let totalGeralAguardando = 0;
+        let filaCompletaLocais = [];
+        let executandoChamadaFlag = false; // Trava física de software contra duplo enter sequencial
 
-        // Função para ativar o áudio nativo na primeira interação
-        function ativarAudio() {
-            if (!audioCtx) {
-                audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        function formatarNomeBancada(valor) {
+            if (!valor) return "Bancada 01";
+            let valorLimpo = valor.trim();
+            if (/^\d+$/.test(valorLimpo)) {
+                let numero = parseInt(valorLimpo, 10);
+                let numeroPadrao = numero < 10 ? `0${numero}` : numero;
+                return `Bancada ${numeroPadrao}`;
             }
-            if (audioCtx.state === 'suspended') {
-                audioCtx.resume();
-            }
-            audioAtivo = true;
-            btnAudio.innerText = "🔊 SOM ATIVADO";
-            btnAudio.classList.add('ativo');
-            
-            // Toca um bipe rápido para confirmar ativação
-            tocarAlertaNativo();
-            
-            // Esconde o botão após alguns segundos para limpar o painel
-            setTimeout(() => {
-                btnAudio.style.display = 'none';
-            }, 2500);
-        }
-
-        // Sintetizador nativo para o Alerta de Chamada (Garante reprodução sem depender de arquivo externo)
-        function tocarAlertaNativo() {
-            if (!audioAtivo || !audioCtx) return;
-
-            try {
-                // Bipe 1
-                let osc1 = audioCtx.createOscillator();
-                let gain1 = audioCtx.createGain();
-                osc1.type = 'sine';
-                osc1.frequency.setValueAtTime(587.33, audioCtx.currentTime); // D5 (Nota D)
-                gain1.gain.setValueAtTime(0.15, audioCtx.currentTime);
-                gain1.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.4);
-                osc1.connect(gain1);
-                gain1.connect(audioCtx.destination);
-                osc1.start();
-                osc1.stop(audioCtx.currentTime + 0.4);
-
-                // Bipe 2 (Atrasado)
-                setTimeout(() => {
-                    let osc2 = audioCtx.createOscillator();
-                    let gain2 = audioCtx.createGain();
-                    osc2.type = 'sine';
-                    osc2.frequency.setValueAtTime(880, audioCtx.currentTime); // A5 (Nota Lá mais aguda)
-                    gain2.gain.setValueAtTime(0.15, audioCtx.currentTime);
-                    gain2.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.6);
-                    osc2.connect(gain2);
-                    gain2.connect(audioCtx.destination);
-                    osc2.start();
-                    osc2.stop(audioCtx.currentTime + 0.6);
-                }, 180);
-
-            } catch (e) {
-                console.log("Falha ao emitir áudio nativo:", e);
-            }
+            return valorLimpo;
         }
 
         function extrairDadosGaiola(gaiolaStr) {
@@ -428,145 +351,212 @@
                 const letra = match[1];
                 const numero = parseInt(match[2], 10);
                 const numeroPadrao = numero < 10 ? `0${numero}` : numero;
-                return { letra, numero, gaiolaTexto: `${letra}-${numeroPadrao}` };
+                return { 
+                    letra: letra, 
+                    numero: numero, 
+                    gaiolaTexto: `${letra}-${numeroPadrao}` 
+                };
             }
             return null;
         }
 
-        database.ref('fila').on('value', function(snapshot) {
-            let todosRegistros = [];
+        function obterParceiroGaiola(dadosGaiola) {
+            if (!dadosGaiola) return null;
+            const num = dadosGaiola.numero;
+            let numParceiro = num % 2 !== 0 ? num + 1 : num - 1;
+            const numFormatado = numParceiro < 10 ? `0${numParceiro}` : numParceiro;
+            return {
+                letra: dadosGaiola.letra,
+                numero: numParceiro,
+                gaiolaTexto: `${dadosGaiola.letra}-${numFormatado}`
+            };
+        }
 
+        database.ref('fila').orderByChild('timestamp').on('value', function(snapshot) {
+            let totalAguardando = 0;
+            filaCompletaLocais = [];
+            
             snapshot.forEach(function(childSnapshot) {
                 const dados = childSnapshot.val();
-                if (dados.status === "chamado") {
-                    todosRegistros.push({
-                        id: childSnapshot.key,
-                        nome: dados.nome,
-                        gaiola: dados.gaiola,
-                        bancada: dados.bancada,
-                        horaChamado: dados.horaChamado || "--:--",
-                        timestamp: dados.timestamp || 0
-                    });
+                dados.id = childSnapshot.key;
+                filaCompletaLocais.push(dados);
+                if (dados.status === "aguardando") {
+                    totalAguardando++;
                 }
             });
 
-            todosRegistros.sort((a, b) => b.timestamp - a.timestamp);
+            totalGeralAguardando = totalAguardando;
+            contadorFila.innerText = totalAguardando;
 
-            if (todosRegistros.length === 0) {
-                containerDestaque.style.display = "none";
-                containerVazio.style.display = "block";
-                listaHistorico.innerHTML = '<div class="sem-chamadas">Nenhuma chamada realizada ainda.</div>';
+            // Se o botão não estiver travado por processamento interno, atualiza o texto/estado normal
+            if (!executandoChamadaFlag) {
+                const proximoPrincipal = filaCompletaLocais.find(d => d.status === "aguardando");
+                if (proximoPrincipal) {
+                    const infoGaiola = extrairDadosGaiola(proximoPrincipal.gaiola);
+                    const parceiroInfo = obterParceiroGaiola(infoGaiola);
+
+                    const parceiroFila = filaCompletaLocais.find(d => {
+                        if (d.status !== "aguardando") return false;
+                        const infoD = extrairDadosGaiola(d.gaiola);
+                        return infoD && infoD.gaiolaTexto === parceiroInfo?.gaiolaTexto;
+                    });
+
+                    const principalEhImpar = infoGaiola && infoGaiola.numero % 2 !== 0;
+                    
+                    let lineImpar = "";
+                    let linePar = "";
+
+                    if (principalEhImpar) {
+                        lineImpar = `<strong>Gaiola ${infoGaiola.gaiolaTexto}:</strong> <span class="txt-presente">${proximoPrincipal.nome}</span>`;
+                        if (parceiroFila) {
+                            linePar = `<strong>Gaiola ${parceiroInfo.gaiolaTexto}:</strong> <span class="txt-presente">${parceiroFila.nome}</span>`;
+                        } else {
+                            linePar = `<strong>Gaiola ${parceiroInfo ? parceiroInfo.gaiolaTexto : '-'}:</strong> <span class="txt-ausente">AGUARDANDO...</span>`;
+                        }
+                    } else {
+                        linePar = `<strong>Gaiola ${infoGaiola.gaiolaTexto}:</strong> <span class="txt-presente">${proximoPrincipal.nome}</span>`;
+                        if (parceiroFila) {
+                            lineImpar = `<strong>Gaiola ${parceiroInfo.gaiolaTexto}:</strong> <span class="txt-presente">${parceiroFila.nome}</span>`;
+                        } else {
+                            lineImpar = `<strong>Gaiola ${parceiroInfo ? parceiroInfo.gaiolaTexto : '-'}:</strong> <span class="txt-ausente">AGUARDANDO...</span>`;
+                        }
+                    }
+
+                    dadosProximo.innerHTML = `${lineImpar}<br>${linePar}`;
+                    btnChamar.disabled = false;
+                    btnChamar.innerText = "Chamar Dupla";
+                } else {
+                    dadosProximo.innerHTML = "Ninguém na fila";
+                    btnChamar.disabled = true;
+                    btnChamar.innerText = "Fila Vazia";
+                }
+            }
+        });
+
+        bancadaInput.addEventListener('input', function() {
+            bancadaInput.classList.remove('erro-campo');
+        });
+
+        function executarChamada() {
+            if (executandoChamadaFlag) return; // Bloqueia o início se já estiver salvando um comando
+
+            let bancadaDigitada = bancadaInput.value.trim();
+            const bancadaSalva = localStorage.getItem('ultimaBancada');
+
+            if (bancadaDigitada === "") {
+                if (bancadaSalva) {
+                    bancadaDigitada = bancadaSalva;
+                } else {
+                    bancadaInput.classList.add('erro-campo');
+                    bancadaInput.focus();
+                    alert("ERRO: Por favor, identifique a sua bancada antes de realizar uma chamada!");
+                    return;
+                }
+            } else {
+                localStorage.setItem('ultimaBancada', bancadaDigitada);
+            }
+
+            if (totalGeralAguardando === 0) return; 
+
+            // Ativa travas físicas e visuais imediatas
+            executandoChamadaFlag = true;
+            btnChamar.disabled = true;
+            btnChamar.innerText = "Processando Chamada...";
+
+            const principal = filaCompletaLocais.find(d => d.status === "aguardando");
+            if (!principal) {
+                executandoChamadaFlag = false;
                 return;
             }
 
-            let duplasAgrupadas = [];
-            let processadosIds = new Set();
+            const infoGaiola = extrairDadosGaiola(principal.gaiola);
+            const parceiroInfo = obterParceiroGaiola(infoGaiola);
 
-            todosRegistros.forEach(registro => {
-                if (processadosIds.has(registro.id)) return;
-
-                const infoG = extrairDadosGaiola(registro.gaiola);
-                if (!infoG) return;
-
-                let numParceiro = infoG.numero % 2 !== 0 ? infoG.numero + 1 : infoG.numero - 1;
-                let numPFormatado = numParceiro < 10 ? `0${numParceiro}` : numParceiro;
-                let textoParceiroAlvo = `${infoG.letra}-${numPFormatado}`;
-
-                let parceiroMatch = todosRegistros.find(r => {
-                    if (r.id === registro.id || processadosIds.has(r.id)) return false;
-                    const infoR = extrairDadosGaiola(r.gaiola);
-                    return infoR && 
-                           infoR.gaiolaTexto === textoParceiroAlvo && 
-                           r.bancada === registro.bancada && 
-                           r.horaChamado === registro.horaChamado;
-                });
-
-                let itemDupla = {
-                    bancada: registro.bancada,
-                    horaChamado: registro.horaChamado,
-                    timestamp: registro.timestamp,
-                    idPrincipal: registro.id
-                };
-
-                const principalEhImpar = infoG.numero % 2 !== 0;
-
-                if (principalEhImpar) {
-                    itemDupla.nomeImpar = registro.nome;
-                    itemDupla.gaiolaImpar = infoG.gaiolaTexto;
-                    itemDupla.nomePar = parceiroMatch ? parceiroMatch.nome : "AGUARDANDO...";
-                    itemDupla.gaiolaPar = textoParceiroAlvo;
-                } else {
-                    itemDupla.nomePar = registro.nome;
-                    itemDupla.gaiolaPar = infoG.gaiolaTexto;
-                    itemDupla.nomeImpar = parceiroMatch ? parceiroMatch.nome : "AGUARDANDO...";
-                    itemDupla.gaiolaImpar = textoParceiroAlvo;
-                }
-
-                duplasAgrupadas.push(itemDupla);
-                
-                processadosIds.add(registro.id);
-                if (parceiroMatch) {
-                    processadosIds.add(parceiroMatch.id);
-                }
+            const parceiro = filaCompletaLocais.find(d => {
+                if (d.status !== "aguardando") return false;
+                const infoD = extrairDadosGaiola(d.gaiola);
+                return infoD && infoD.gaiolaTexto === parceiroInfo?.gaiolaTexto;
             });
 
-            const atual = duplasAgrupadas[0];
+            const agora = new Date();
+            const horaFormatada = agora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+            const bancadaParaEnviar = formatarNomeBancada(bancadaDigitada);
 
-            nomeImpar.innerText = atual.nomeImpar;
-            gaiolaImpar.innerText = `Gaiola ${atual.gaiolaImpar}`;
-            if (atual.nomeImpar === "AGUARDANDO...") {
-                boxImpar.classList.add('retardatario');
-            } else {
-                boxImpar.classList.remove('retardatario');
-            }
+            // SEGURANÇA MÁXIMA: Usa transação atômica do Firebase para o motorista principal.
+            // Se outra bancada tiver alterado o status dele nos últimos milissegundos, esta transação vai abortar.
+            const principalRef = database.ref('fila/' + principal.id);
+            
+            principalRef.transaction(function(currentData) {
+                if (currentData === null) return currentData;
+                // Se alguém já pegou esse motorista, cancela mudando o status localmente para evitar sobrescrever
+                if (currentData.status !== "aguardando") {
+                    return; // Aborta transação retornando indefinido (não altera nada)
+                }
+                
+                // Aplica as novas chaves com segurança
+                currentData.status = "chamado";
+                currentData.bancada = bancadaParaEnviar;
+                currentData.horaChamado = horaFormatada;
+                currentData.parceiroId = parceiro ? parceiro.id : "retardatario";
+                currentData.parceiroNome = parceiro ? parceiro.nome : "AGUARDANDO...";
+                currentData.parceiroGaiola = parceiroInfo ? parceiroInfo.gaiolaTexto : "";
+                return currentData;
+            }, function(error, committed, snapshot) {
+                if (error || !committed) {
+                    // Outra bancada chamou primeiro! Destrava o botão e avisa o operador sem quebrar o painel.
+                    executandoChamadaFlag = false;
+                    btnChamar.disabled = false;
+                    btnChamar.innerText = "Chamar Dupla";
+                    bancadaInput.value = "";
+                    bancadaInput.focus();
+                    return; 
+                }
 
-            nomePar.innerText = atual.nomePar;
-            gaiolaPar.innerText = `Gaiola ${atual.gaiolaPar}`;
-            if (atual.nomePar === "AGUARDANDO...") {
-                boxPar.classList.add('retardatario');
-            } else {
-                boxPar.classList.remove('retardatario');
-            }
+                // Se o principal foi com sucesso, processamos o parceiro
+                if (parceiro) {
+                    database.ref('fila/' + parceiro.id).update({
+                        status: "chamado",
+                        bancada: bancadaParaEnviar,
+                        horaChamado: horaFormatada,
+                        parceiroId: principal.id,
+                        parceiroNome: principal.nome,
+                        parceiroGaiola: infoGaiola.gaiolaTexto
+                    });
+                }
 
-            destaqueBancada.innerText = atual.bancada;
-            destaqueHora.innerText = atual.horaChamado;
+                // Renderiza na tela o resultado da chamada executada por esta bancada
+                const principalEhImpar = infoGaiola && infoGaiola.numero % 2 !== 0;
+                
+                if (principalEhImpar) {
+                    nomeAtualImpar.innerText = principal.nome;
+                    gaiolaAtualImpar.innerText = infoGaiola.gaiolaTexto;
+                    nomeAtualPar.innerText = parceiro ? parceiro.nome : "AGUARDANDO...";
+                    gaiolaAtualPar.innerText = parceiroInfo ? parceiroInfo.gaiolaTexto : "-";
+                } else {
+                    nomeAtualPar.innerText = principal.nome;
+                    gaiolaAtualPar.innerText = infoGaiola.gaiolaTexto;
+                    nomeAtualImpar.innerText = parceiro ? parceiro.nome : "AGUARDANDO...";
+                    gaiolaAtualImpar.innerText = parceiroInfo ? parceiroInfo.gaiolaTexto : "-";
+                }
+                
+                nomeAtualImpar.className = nomeAtualImpar.innerText === "AGUARDANDO..." ? "txt-ausente" : "txt-presente";
+                nomeAtualPar.className = nomeAtualPar.innerText === "AGUARDANDO..." ? "txt-ausente" : "txt-presente";
 
-            containerVazio.style.display = "none";
-            containerDestaque.style.display = "block";
+                horaAtual.innerText = horaFormatada;
+                painelAtual.style.display = "block";
 
-            // Executa o som de notificação inteligente se o ID mudou
-            if (ultimoIdChamado && ultimoIdChamado !== atual.idPrincipal) {
-                tocarAlertaNativo();
-            }
-            ultimoIdChamado = atual.idPrincipal;
+                // Libera os controles para a próxima chamada legítima
+                executandoChamadaFlag = false;
+                bancadaInput.value = "";
+                bancadaInput.focus();
+            });
+        }
 
-            let historicoHTML = "";
-            const listaHistoricoItens = duplasAgrupadas.slice(1);
+        btnChamar.addEventListener('click', executarChamada);
 
-            if (listaHistoricoItens.length > 0) {
-                listaHistoricoItens.forEach(function(item) {
-                    historicoHTML += `
-                        <div class="chamada-item">
-                            <div style="display: flex; gap: 30px; width: 80%;">
-                                <div style="flex: 1;">
-                                    <div class="motorista-col ${item.nomeImpar === 'AGUARDANDO...' ? 'ausente' : ''}">${item.nomeImpar}</div>
-                                    <div class="gaiola-col">Gaiola: ${item.gaiolaImpar}</div>
-                                </div>
-                                <div style="flex: 1; border-left: 1px solid #1e293b; padding-left: 20px;">
-                                    <div class="motorista-col ${item.nomePar === 'AGUARDANDO...' ? 'ausente' : ''}">${item.nomePar}</div>
-                                    <div class="gaiola-col">Gaiola: ${item.gaiolaPar}</div>
-                                </div>
-                            </div>
-                            <div style="text-align: right;">
-                                <div style="font-size: 14px; color: #64748b; margin-bottom: 5px;">${item.horaChamado}</div>
-                                <span class="bancada-badge">${item.bancada}</span>
-                            </div>
-                        </div>
-                    `;
-                });
-                listaHistorico.innerHTML = historicoHTML;
-            } else {
-                listaHistorico.innerHTML = '<div class="sem-chamadas">Nenhuma chamada anterior na lista.</div>';
+        window.addEventListener('keydown', function(evento) {
+            if (evento.key === 'Enter') {
+                executandoChamadaFlag ? evento.preventDefault() : executarChamada();
             }
         });
     </script>
